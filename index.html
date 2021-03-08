@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1a2b</title>
+    <link rel="stylesheet" type="text/css" href="css/bujv.css">
+    <script src="js/vue.js"></script>
+</head>
+
+<body>
+    <div class="header">
+        <h1>1A2B猜数字游戏</h1>
+    </div>
+
+    <div id="app">
+        <div class="topnav">
+            <button @click="shadowSwitch">游戏规则</button>
+            <button @click="createArr">新游戏</button>
+        </div>
+
+        <div class="row" v-if="s">
+            <div class="column left">
+                <div id="playzone">
+                    <input type="text" maxlength="4" size="4" v-model="nums"
+                        onkeyup="this.value=this.value.replace(/\D/g,'')"
+                        onpaste="this.value=this.value.replace(/\D/g,'')">
+                    <input type="button" value="决定" @click="checkArr">
+                </div>
+            </div>
+            <div class="column right">
+                <h2>猜测历史</h2>
+                <p v-html="his" id="his"></p>
+            </div>
+        </div>
+        <div id="shadow" v-if="sha" @click="shadowSwitch">
+            <p id="rule">猜数字是一款锻炼逻辑思维能力的小游戏。由系统先随机生成从0到9之间的、四个不重复的数字。
+                玩家在文本框中进行猜测，每猜一次，系统都会给出几A几B，其中A前面的数字表示位置正确的数的个数，而B前的数字表示数字正确而位置不对的数的个数。
+                如正确答案为 1234，而猜的人猜 1325，则是 1A2B，其中有一个1的位置对了，记为1A，而2和3这两个数字对了，而位置没对，因此记为 2B，合起来就是 1A2B。
+                接着玩家再根据系统返回的几A几B继续猜，直到猜中（即 4A0B）为止。
+                尽可能用最少的回合猜出数字吧！
+            </p>
+        </div>
+    </div>
+
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                //玩家输入的数组
+                nums: '',
+                //系统生成的数组
+                arr1: [],
+                //a
+                a: 0,
+                //b
+                b: 0,
+                //回合数
+                round: 0,
+                //历史记录
+                his: '',
+                //游戏区域显示
+                s: false,
+                //遮罩层开关
+                sha: false
+            },
+            methods: {
+                //系统生成随机数组
+                createArr: function () {
+                    // let arr1 = [];
+                    for (let i = 0; i < 4; i++) {
+                        if (i > 0) {
+                            let num;
+                            do {
+                                num = Math.floor(Math.random() * 10);
+                                console.log(i + " " + num);
+                            } while (this.arr1.indexOf(num) >= 0)
+                            this.arr1[i] = num;
+                        } else {
+                            this.arr1[0] = Math.floor(Math.random() * 10);
+                            console.log(this.arr1[0]);
+                        }
+                    }
+                    console.log("系统生成了" + this.arr1);
+                    this.s = true;
+                },
+                //对比数组
+                checkArr: function () {
+                    let arr2 = [];
+                    arr2 = this.nums.split("");
+                    //判断是否为四位数
+                    if (arr2.length === 4) {
+                        //判断是否有重复数字
+                        let arr3 = arr2.sort();
+                        let flag = 0;
+                        for (let i = 0; i < arr3.length; i++) {
+                            if (arr3[i] === arr3[i + 1]) {
+                                flag++;
+                            }
+                        }
+                        if (flag === 0) {
+                            let a = this.a;
+                            let b = this.b;
+                            this.round++;
+                            console.log("玩家输入的数组" + arr2);
+                            console.log("系统生成的数组" + this.arr1)
+                            for (let i = 0; i < arr2.length; i++) {
+                                if (this.arr1.indexOf(Number(arr2[i])) >= 0) {
+                                    if (this.arr1[i] == arr2[i]) {
+                                        a++;
+                                    } else {
+                                        b++;
+                                    }
+                                }
+                            }
+                            this.nums = '';
+                            this.his += "回合：" + this.round + "&nbsp;&nbsp;&nbsp;&nbsp;" + "玩家输入：" + arr2 + "&nbsp;&nbsp;&nbsp;&nbsp;" + "结果：" + a + "a" + b + "b" + "<br/>";
+                            if (a == 4) {
+                                alert("恭喜你，猜对了！总共花费回合数：" + this.round);
+                            }
+                        } else {
+                            alert("请输入不重复的数字！");
+                        }
+                    } else {
+                        alert("请输入四位数字！");
+                    }
+                },
+                shadowSwitch: function () {
+                    this.sha = !this.sha;
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
