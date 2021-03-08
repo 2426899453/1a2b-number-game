@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>1a2b</title>
-    <link rel="stylesheet" type="text/css" href="css/styl.css">
+    <link rel="stylesheet" type="text/css" href="css/bujv.css">
     <script src="js/vue.js"></script>
 </head>
 
@@ -91,10 +91,14 @@
                 checkArr: function () {
                     let arr2 = [];
                     arr2 = this.nums.split("");
+                    let arr4 =[];
+                    arr4 = this.nums.split("");
+                    console.log("11"+arr2);
                     //判断是否为四位数
                     if (arr2.length === 4) {
                         //判断是否有重复数字
                         let arr3 = arr2.sort();
+                        console.log("22"+arr2);
                         let flag = 0;
                         for (let i = 0; i < arr3.length; i++) {
                             if (arr3[i] === arr3[i + 1]) {
@@ -117,7 +121,7 @@
                                 }
                             }
                             this.nums = '';
-                            this.his += "回合：" + this.round + "&nbsp;&nbsp;&nbsp;&nbsp;" + "玩家输入：" + arr2 + "&nbsp;&nbsp;&nbsp;&nbsp;" + "结果：" + a + "a" + b + "b" + "<br/>";
+                            this.his += "回合：" + this.round + "&nbsp;&nbsp;&nbsp;&nbsp;" + "玩家输入：" + arr4 + "&nbsp;&nbsp;&nbsp;&nbsp;" + "结果：" + a + "a" + b + "b" + "<br/>";
                             if (a == 4) {
                                 alert("恭喜你，猜对了！总共花费回合数：" + this.round);
                             }
